@@ -1,0 +1,19 @@
+﻿@model AddVM
+@foreach (var add in Model.adds)
+{
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="jumbotron">
+                <h5>Listed by @add.Name</h5>
+                <h5>@add.Date.ToLongDateString()</h5>
+                <h5>Phone Number: @add.Number</h5>
+                <h3>Details:</h3>
+                <p>@add.Description</p>
+                <form method="post" action="/home/DeleteAdd">
+                    <input type="hidden" name="id" value="@add.id" />
+                    <button class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+}
