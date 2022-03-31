@@ -8,8 +8,4 @@
     <ProjectReference Include="..\SimpleAddsAuth.data\SimpleAddsAuth.data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Account\" />
-  </ItemGroup>
-
 </Project>
