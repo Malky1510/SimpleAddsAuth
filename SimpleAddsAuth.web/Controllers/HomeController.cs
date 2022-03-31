@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SimpleAddsAuth.data;
 using SimpleAddsAuth.web.Models;
 using System;
 using System.Collections.Generic;
@@ -23,15 +24,63 @@ namespace SimpleAddsAuth.web.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        private readonly string _connectionString = @"Data Source=.\sqlexpress;Initial Catalog=Auth;Integrated Security=true;";
+
+        public IActionResult Index()
+        {
+
+            var repo = new UserRepository(_connectionString);
+            var adds = repo.GetAllAdds();
+            if (User.Identity.IsAuthenticated)
+            {
+                foreach (var add in adds)
+                {
+                    if (User.Identity.Name == add.Email)
+                    {
+                        add.IsOwner = true;
+                    }
+                    else
+                    {
+                        add.IsOwner = false;
+                    }
+                }
+
+            }
+            AddVM adv = new AddVM();
+            adv.adds = adds;
+            return View(adv);
+        }
+        [HttpPost]
+        public IActionResult DeleteAdd(int id)
+        {
+            var repo = new UserRepository(_connectionString);
+            repo.DeleteAdd(id);
+            return Redirect("/");
+        }
+        [Authorize]
+        public IActionResult NewAdd()
         {
             return View();
         }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpPost]
+        [Authorize]
+        public IActionResult NewAdd(Add add)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var repo = new UserRepository(_connectionString);
+            var user = repo.GetByEmail(User.Identity.Name);
+            add.LoginId = user.Id;
+            repo.NewAdd(add);
+            return View();
+        }
+        [Authorize]
+        public IActionResult MyAccount()
+        {
+            var repo = new UserRepository(_connectionString);
+            var user = repo.GetByEmail(User.Identity.Name);
+            var adds = repo.GetAllAdds(user.Id);
+            AddVM adv = new AddVM();
+            adv.adds = adds;
+            return View(adv);
         }
     }
 }

@@ -18,8 +18,8 @@ namespace SimpleAddsAuth.data
         }
         public void AddUser(User user, string password)
         {
-            using var connection = new SqlConnection(_connectionString);
-            using var cmd = connection.CreateCommand();
+             var connection = new SqlConnection(_connectionString);
+             var cmd = connection.CreateCommand();
             cmd.CommandText = "INSERT INTO Logins (Name, Email, PasswordHash) " +
                 "VALUES (@name, @email, @hash)";
             cmd.Parameters.AddWithValue("@name", user.Name);
@@ -44,8 +44,8 @@ namespace SimpleAddsAuth.data
         }
         public User GetByEmail(string email)
         {
-            using var connection = new SqlConnection(_connectionString);
-            using var cmd = connection.CreateCommand();
+           var connection = new SqlConnection(_connectionString);
+             var cmd = connection.CreateCommand();
             cmd.CommandText = "SELECT TOP 1 * FROM Users WHERE Email = @email";
             cmd.Parameters.AddWithValue("@email", email);
             connection.Open();
@@ -63,10 +63,10 @@ namespace SimpleAddsAuth.data
                 PasswordHash = (string)reader["PasswordHash"]
             };
         }
-        public List<Add> GetAdds()
+        public List<Add> GetAllAdds()
         {
-            using var connection = new SqlConnection(_connectionString);
-            using var cmd = connection.CreateCommand();
+             var connection = new SqlConnection(_connectionString);
+             var cmd = connection.CreateCommand();
             cmd.CommandText = "Select a.Id, a.LoginId, a.Description, a.Number, l.Name, l.Email, a.Date from Adds a JOIN Logins l ON a.LoginId = l.Id";
             List<Add> addslist = new List<Add>();
             connection.Open();
@@ -91,8 +91,8 @@ namespace SimpleAddsAuth.data
         }
         public List<Add> GetAllAdds(int Id)
         {
-            using var connection = new SqlConnection(_connectionString);
-            using var cmd = connection.CreateCommand();
+             var connection = new SqlConnection(_connectionString);
+             var cmd = connection.CreateCommand();
             cmd.CommandText = "SELECT a.id, a.LoginId,a.Description,a.Number,l.Name,l.Email,a.Date FROM Adds a JOIN Logins l on a.LoginId = l.Id where LoginId=@id";
             cmd.Parameters.AddWithValue("@id", Id);
             List<Add> adds = new List<Add>();
@@ -116,8 +116,8 @@ namespace SimpleAddsAuth.data
         }
         public void DeleteAdd(int Id)
         {
-            using var connection = new SqlConnection(_connectionString);
-            using var cmd = connection.CreateCommand();
+            var connection = new SqlConnection(_connectionString);
+            var cmd = connection.CreateCommand();
             cmd.CommandText = "DELETE FROM Adds WHERE Id=@id";
             cmd.Parameters.AddWithValue("@id", Id);
 
@@ -126,8 +126,8 @@ namespace SimpleAddsAuth.data
         }
         public void NewAdd(Add add)
         {
-            using var connection = new SqlConnection(_connectionString);
-            using var cmd = connection.CreateCommand();
+             var connection = new SqlConnection(_connectionString);
+             var cmd = connection.CreateCommand();
             cmd.CommandText = "INSERT INTO Adds VALUES (@PhoneNumber, @Description, @LoginId, GetDate())";
             cmd.Parameters.AddWithValue("@PhoneNumber", add.Number);
             cmd.Parameters.AddWithValue("@Description", add.Description);
